@@ -118,7 +118,12 @@ String potLoop() {
     //mereni vlhkosti pudy, 595 je sucho, 239 je mokro
     sensorSoil = analogRead(POTSOILPIN[i]);
 
-    values += String("{\"sh\":") + map(sensorSoil, 239,595,100,0) + String(",\"wl\":") + map(resval, 0,330,0,100) + "}";
+    for (int y = 0; y < 5; y++) {
+      resval = (resval + analogRead(POTWATERPIN[i])) / 2;
+      sensorSoil = (sensorSoil + analogRead(POTSOILPIN[i])) / 2;
+    }
+
+    values += String("{\"sh\":") + map(sensorSoil, 0,1023,100,0) + String(",\"wl\":") + map(resval, 0,650,0,100) + "}";
 
     if (i < POTCOUNT - 1) {
       values += ",";  
@@ -145,6 +150,7 @@ void fanLoop() {
     if (topic == "fan/use") {
       String message = incoming.substring(9, incoming.length() - 1);
       fanUsable = message == "true";
+      Serial.println(fanUsable);
     }
     else if (topic == "fan/tem") {
       String message = incoming.substring(9, incoming.length() - 1);
@@ -174,15 +180,18 @@ void fanLoop() {
   float h = dht.readHumidity();
   float t = dht.readTemperature(); 
 
-  if (fanUsable) {
+  if (fanUsable == true || fanUsable == 1) {
       if (h > (fanHum + fanHumHysteresis) || t > (fanTemp + fanTempHysteresis)) {
-        digitalWrite(FANPIN, HIGH);
+      //  digitalWrite(FANPIN, HIGH);
+        analogWrite(FANPIN, 900);
       }
       else if (h < (fanHum - fanHumHysteresis) || t < (fanTemp - fanTempHysteresis)) {
-        digitalWrite(FANPIN, LOW);
+      //  digitalWrite(FANPIN, LOW);
+        analogWrite(FANPIN, 10);
       }
   }
   else {
-    digitalWrite(FANPIN, LOW);
+    //digitalWrite(FANPIN, LOW);
+    analogWrite(FANPIN, 10);
   }
 }

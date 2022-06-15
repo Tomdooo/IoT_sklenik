@@ -2,11 +2,11 @@
 #include <PubSubClient.h>   //Je potřeba samostatně nainstalovat
 
 // WiFi
-const char* ssid        = "Obyvak";
-const char* password    = "ontomina";
+const char* ssid        = "LAPTOP-A2VH7U0H_3130";
+const char* password    = "4W+534h9";
 
 // Připojení k MQTT
-const char* mqtt_server = "192.168.100.203";
+const char* mqtt_server = "192.168.137.1";
 const int   mqtt_port = 1883;
 const char* mqttUser = "client";
 const char* mqttPassword = "test";
